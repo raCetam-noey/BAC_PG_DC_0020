@@ -1,0 +1,189 @@
+{
+    "_version": "1.59.0",
+    "sap.app": {
+        "id": "pgdc0020_1",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.14.1",
+            "toolsId": "713530a6-ce57-4f4c-bc72-b251d4813357"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZSB_GRVUPL/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation"
+                    ],
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotation": {
+                "type": "ODataAnnotation",
+                "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZSB_GRVUPL_VAN',Version='0001')/$value/?sap-language=KO&sap-client=080"
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "pgdc0020_1-upload": {
+                    "semanticObject": "pgdc",
+                    "action": "upload",
+                    "title": "{{flpTitle}}",
+                    "icon": "sap-icon://action",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    }
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "fullWidth": true,
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.120.15",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {},
+                "sap.fe.navigation": {
+                    "lazy": false
+                },
+                "sap.fe.placeholder": {
+                    "lazy": false
+                },
+                "sap.ui.layout": {
+                    "minVersion": "1.36.0",
+                    "lazy": true
+                },
+                "sap.ui.unified": {
+                    "lazy": true
+                },
+                "sap.uxap": {
+                    "lazy": true
+                }
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "pgdc0020_1.i18n.i18n"
+                }
+            },
+            "": {
+              "dataSource": "mainService",
+                "settings": {
+                  "defaultBindingMode": "TwoWay",
+                  "defaultCountMode": "Inline",
+                  "preload": true,
+                  "refreshAfterChange": true
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "pgdc0020_1.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "UploadObject",
+                    "pattern": ":?query:",
+                    "target": [
+                        "UploadObject"
+                    ]
+                },
+                {
+                    "name": "TaskLog",
+                    "pattern": "/TaskLog",
+                    "target": [
+                        "TaskLog"
+                    ]
+                },  
+                {
+                    "name": "Detail",
+                    "pattern": "/Detail{objectId}",
+                    "target": [
+                        "Detail"
+                    ]
+                }
+            ],
+            "targets": {
+                "UploadObject": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "UploadObject",
+                    "viewName": "UploadObject"
+                },
+                "TaskLog": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "TaskLog",
+                    "viewName": "TaskLog"
+                },
+                "Detail": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "Detail",
+                    "viewName": "Detail"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "pgdc0020_1.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        }
+    }
+}

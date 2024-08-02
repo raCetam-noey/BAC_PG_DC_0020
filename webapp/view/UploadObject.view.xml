@@ -1,0 +1,157 @@
+<mvc:View xmlns:mdc="sap.ui.mdc" height="100%" 
+    controllerName="pgdc0020_1.controller.UploadObject" 
+    xmlns:m="sap.m" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:mvc="sap.ui.core.mvc"     
+    xmlns:unified="sap.ui.unified" 
+    xmlns:semantic="sap.m.semantic" 
+    xmlns:core="sap.ui.core" 
+    xmlns:table="sap.ui.table" 
+    xmlns="sap.uxap" 
+    xmlns:my="pgdc0020_1."
+    xmlns:smarttable="sap.ui.comp.smarttable"  
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar">
+    <m:Page id="page" enableScrolling="true" navButtonPress="onNavBack"  showHeader="false" showNavButton="true" showFooter="false" busy="{objectView>/busy}" title="{i18n>detailTitle}" >
+        <m:content>
+            <m:VBox height="100%">
+                <ObjectPageLayout id="ObjectPageLayout" showFooter="false" upperCaseAnchorBar="false" height="100%" alwaysShowContentHeader="true" preserveHeaderStateOnScroll="false" useIconTabBar="true" selectedSection="pagesection">
+                    <headerTitle>
+                        <ObjectPageHeader id="headerForTest" visible="false" objectTitle="{i18n>CnsldtnTaskTypeT}"/>
+                    </headerTitle>
+                    <headerContent>
+                        <m:Panel id="contentPanel">
+                            <m:FlexBox id="contentFlexBox" alignItems="Center" height="2rem" justifyContent="Center">
+                                <unified:FileUploader id="pgdc0010.uploader" 
+                                                    name="postingExcelUpload" 
+                                                    width="500px" 
+                                                    tooltip="{i18n>SelectFile}" 
+                                                    class="sapUiSmallMarginEnd" 
+                                                    change="handleUploadPress"
+                                                    uploadComplete="excelHandleUploadComplete" 
+                                                    fileType="xls,xlsx" 
+                                                    sendXHR="true" 
+                                                    sameFilenameAllowed="true" 
+                                                    maximumFileSize="100" 
+                                                    uploadOnChange="false" 
+                                                    useMultipart="false" 
+                                                    placeholder="{i18n>UploadHint}"/>
+                                <m:Button id="uploadButton" 
+                                        visible="false"
+                                        text="{i18n>UploadButtonText}" 
+                                        tooltip="{i18n>UploadButtonText}" 
+                                        type="Transparent" 
+                                        press="handleUploadPress"/>
+                                <m:Button id="downloadButton" 
+                                        text="{i18n>DownloadButtonText}" 
+                                        tooltip="{i18n>DownloadButtonText}" 
+                                        type="Transparent" 
+                                        press="onDownloadPress"/>
+                            </m:FlexBox>
+                            <m:BusyDialog id="pgdc0010.BusyDialog"/>
+                        </m:Panel>
+                    </headerContent>
+                    <sections>
+                        <ObjectPageSection id="pagesection">
+                            <subSections>
+                                <ObjectPageSubSection id="subsection" title="{i18n>LogDocuTitle}">
+                                    <blocks>
+                                        <m:VBox height="100%" class="scrollablePlace">
+                                            <mdc:ActionToolbar width="100%" >
+                                                        <mdc:end>
+                                                            <m:Button text="저장" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="제출" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="승인" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="작업상태로그" press="onTaskLogPress" type="Emphasized" enabled="true"/>
+                                                        </mdc:end>
+                                            </mdc:ActionToolbar>
+                                            <layout:Splitter id="splitter" height="100%">
+                                                <m:Page id="reportTitle" showHeader="false">
+                                                    <m:layoutData>
+                                                        <layout:SplitterLayoutData id="splitterLeft" size="10%"/>
+                                                    </m:layoutData>
+                                                    <m:Toolbar>
+                                                        <m:SearchField width="100%" search="onSearchTree"/>
+                                                    </m:Toolbar>
+                                                    <m:Tree id="reportTree" mode="SingleSelectMaster" selectionChange="onTreeSelectionChange" itemPress="onLeftClicked" width="100%" class="sapUiSizeCompact" items="{path:'reportTreeModel>/entries'}">
+                                                        <m:StandardTreeItem  id="idTreeItem" type="Navigation" title="{parts:[{path:'reportTreeModel>name'}]}" highlight="None" />
+                                                    </m:Tree>
+                                                </m:Page>
+                                                <m:App id="app" height="100%">
+                                                    <m:layoutData id="layout">
+                                                        <layout:SplitterLayoutData size="auto"/>
+                                                    </m:layoutData>
+                                                    <m:IllustratedMessage enableVerticalResponsiveness="true" illustrationType="sapIllus-Tent" id="illustratedmessage"/>
+                                                </m:App>
+                                            </layout:Splitter>
+                                            <m:layoutData>
+                                                <m:FlexItemData minWidth="960px"/>
+                                            </m:layoutData>
+                                        </m:VBox>
+                                    </blocks>
+                                </ObjectPageSubSection>
+                            </subSections>
+                        </ObjectPageSection>
+                        <ObjectPageSection id="pagesection2">
+                            <subSections>
+                                <ObjectPageSubSection id="subsection2" title="{i18n>UploadedTitle}">
+                                    <blocks>
+                                        <m:App id="app2" height="100%">
+                                                    <m:layoutData id="layout2">
+                                                    </m:layoutData>
+                                        <m:VBox height="100%" class="scrollablePlace">
+                                        <smarttable:SmartTable
+                                            entitySet="RprtdCnsldHeaderEntity"
+                                            editable="false"
+                                            header="{i18n>UploadedTitle}"
+                                            useExportToExcel="true"
+                                            useTablePersonalisation="true"
+                                            beforeRebindTable="onBeforeRebindReclassification"
+                                            height="100%"
+                                            showRowCount="true"
+                                            persistencyKey="pgdc0020_1.uploaded.filter.variant"
+                                            placeToolbarInTable="true"
+                                            enableAutoBinding="true"
+                                            useVariantManagement="true"
+                                            showFullScreenButton="true"
+                                            class="sapFioriListReportSmartTable"
+                                            requestAtLeastFields="RowStatus"
+                                        >
+                                             <smarttable:layoutData>
+                                                <m:FlexItemData
+                                                    id="FlexItemData"
+                                                    growFactor="1"
+                                                    baseSize="0%"
+                                                />
+                                            </smarttable:layoutData>
+                                                <table:Table
+                                                    width="100%"
+                                                    id="pgdc0020_1.table.tasklog"
+                                                    enableColumnReordering="false"
+                                                    enableCustomFilter="false"
+                                                    enableCellFilter="false"
+                                                    threshold="100"
+                                                    minAutoRowCount="18"
+                                                    rowActionCount="1"
+                                                    visibleRowCountMode="Auto"    
+                                                >
+                                                    <table:rowActionTemplate>
+                                                        <table:RowAction  >
+                                                            <table:RowActionItem type="Navigation"
+                                                                press="onHeaderDetail"
+                                                            ></table:RowActionItem>
+                                                        </table:RowAction>
+                                                    </table:rowActionTemplate>
+                                                </table:Table>
+                                        </smarttable:SmartTable>
+                                        </m:VBox>
+                                        </m:App>
+                                    </blocks>
+                                </ObjectPageSubSection>
+                            </subSections>
+                        </ObjectPageSection>
+                    </sections>
+                </ObjectPageLayout>
+            </m:VBox>
+        </m:content>
+    </m:Page>
+</mvc:View>

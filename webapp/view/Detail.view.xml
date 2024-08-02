@@ -1,0 +1,57 @@
+<mvc:View xmlns:mdc="sap.ui.mdc" height="100%" 
+    controllerName="pgdc0020_1.controller.Detail" 
+    xmlns:m="sap.m" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:mvc="sap.ui.core.mvc"     
+    xmlns:unified="sap.ui.unified" 
+    xmlns:semantic="sap.m.semantic" 
+    xmlns:core="sap.ui.core" 
+    xmlns:table="sap.ui.table" 
+    xmlns="sap.uxap" 
+    xmlns:my="pgdc0020_1."
+    xmlns:smarttable="sap.ui.comp.smarttable"  
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar">
+    <m:Page id="page" enableScrolling="true" navButtonPress="onNavBack"  showHeader="false" showNavButton="true" showFooter="false" busy="{objectView>/busy}" title="{i18n>detailTitle}" >
+        <m:content>
+            <m:VBox height="100%">
+                <ObjectPageLayout id="ObjectPageLayout" showFooter="false" upperCaseAnchorBar="false" height="100%" alwaysShowContentHeader="true" preserveHeaderStateOnScroll="false" useIconTabBar="true" selectedSection="pagesection">
+                    <headerTitle>
+                        <ObjectPageHeader id="headerForTest" visible="false" objectTitle="{i18n>CnsldtnTaskTypeT}"/>
+                    </headerTitle>
+                    <headerContent>
+                        <m:Panel id="contentPanel">
+                            <m:BusyDialog id="pgdc0010.BusyDialog"/>
+                        </m:Panel>
+                    </headerContent>
+                    <sections>
+                        <ObjectPageSection id="pagesection">
+                            <subSections>
+                                <ObjectPageSubSection id="subsection" title="{i18n>LogDocuTitle}">
+                                    <blocks>
+                                        <m:VBox height="100%" class="scrollablePlace">
+                                            <mdc:ActionToolbar width="100%" >
+                                                        <mdc:end>
+                                                            <m:Button text="저장" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="제출" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="승인" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="작업상태로그" press="onTaskLogPress" type="Emphasized" enabled="true"/>
+                                                        </mdc:end>
+                                            </mdc:ActionToolbar>
+                                                <m:App id="app" height="100%">
+                                                    <m:layoutData id="layout">
+                                                        <layout:SplitterLayoutData size="auto"/>
+                                                    </m:layoutData>
+                                                    <m:IllustratedMessage enableVerticalResponsiveness="true" illustrationType="sapIllus-Tent" id="illustratedmessage"/>
+                                                </m:App>
+                                        </m:VBox>
+                                    </blocks>
+                                </ObjectPageSubSection>
+                            </subSections>
+                        </ObjectPageSection>
+                        
+                    </sections>
+                </ObjectPageLayout>
+            </m:VBox>
+        </m:content>
+    </m:Page>
+</mvc:View>
