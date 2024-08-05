@@ -544,6 +544,7 @@ function(
                                         <ActionControl>
                                             <UpdateMode>5</UpdateMode>
                                             <IsDataPeriodic>true</IsDataPeriodic>
+                                            <ConsolidationDocumentType>${data.Docty}</ConsolidationDocumentType>
                                         </ActionControl>
                                         <ReportedFinancialDataCreateRequestMessage>
                                             <MessageHeader>
@@ -696,7 +697,7 @@ function(
                     Pprctr: entry.PPRCTR,
                     Psegment: entry.PSEGMENT,
                     Kokrs: entry.KOKRS,
-                    Docty: '5'
+                    Docty: '07'
                 };
         
                 this.getModel().create("/GRVUPL03", draftEntry, {
