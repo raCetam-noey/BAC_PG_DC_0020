@@ -17,7 +17,10 @@ function (JSONModel, Device) {
 
         createStatusModel: function () {
             var model = new JSONModel({
-                TaskStatus: ""
+                WF01 : false,
+                WF02 : false,
+                WF03 : false,
+                WF04 : false
             });
             return model;
         }

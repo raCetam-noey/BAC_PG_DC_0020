@@ -21,6 +21,7 @@ sap.ui.define(["sap/ui/core/format/NumberFormat", "sap/ui/core/format/DateFormat
             return value != 0 ? "Error" : "Success";
         },
 
+
         FormatStatus: function(s) {
             switch (s) {
             case "E":
@@ -219,56 +220,6 @@ sap.ui.define(["sap/ui/core/format/NumberFormat", "sap/ui/core/format/DateFormat
             } else {
                 return this.getResourceBundle().getText("Periodical");
             }
-        },
-        FormatUpdateMode: function(v) {
-            switch (v) {
-            case "1":
-                return this.getResourceBundle().getText("UpdateMode1");
-            case "2":
-                return this.getResourceBundle().getText("UpdateMode2");
-            case "3":
-                return this.getResourceBundle().getText("UpdateMode3");
-            case "4":
-                return this.getResourceBundle().getText("UpdateMode4");
-            case "A":
-                return this.getResourceBundle().getText("UpdateModeA");
-            case "B":
-                return this.getResourceBundle().getText("UpdateModeB");
-            case "C":
-                return this.getResourceBundle().getText("UpdateModeC");
-            case "D":
-                return this.getResourceBundle().getText("UpdateModeD");
-            }
-        },
-        CombineUpdateDesc: function(v) {
-            var a;
-            switch (v) {
-            case "1":
-                a = this.getResourceBundle().getText("UpdateMode1");
-                break;
-            case "2":
-                a = this.getResourceBundle().getText("UpdateMode2");
-                break;
-            case "3":
-                a = this.getResourceBundle().getText("UpdateMode3");
-                break;
-            case "4":
-                a = this.getResourceBundle().getText("UpdateMode4");
-                break;
-            case "A":
-                a = this.getResourceBundle().getText("UpdateModeA");
-                break;
-            case "B":
-                a = this.getResourceBundle().getText("UpdateModeB");
-                break;
-            case "C":
-                a = this.getResourceBundle().getText("UpdateModeC");
-                break;
-            case "D":
-                a = this.getResourceBundle().getText("UpdateModeD");
-            }
-            var m = v + " (" + a + ")";
-            return m;
         },
         FormatCurrency: function(a, c) {
             if (a && c) {

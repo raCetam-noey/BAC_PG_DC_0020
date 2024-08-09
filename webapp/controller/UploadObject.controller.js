@@ -63,6 +63,7 @@ function(
             } else {
                 // this._onBindingChange();
             }
+            var uploadedStatus = this.getView().getModel('uploadedStatus')
         },
 
         _initModel: function() {
@@ -544,7 +545,7 @@ function(
                                         <ActionControl>
                                             <UpdateMode>5</UpdateMode>
                                             <IsDataPeriodic>true</IsDataPeriodic>
-                                            <ConsolidationDocumentType>${data.Docty}</ConsolidationDocumentType>
+                                            <ConsolidationDocumentType>7</ConsolidationDocumentType>
                                         </ActionControl>
                                         <ReportedFinancialDataCreateRequestMessage>
                                             <MessageHeader>
@@ -555,7 +556,7 @@ function(
                                                 <ConsolidationUnit>${data.CnsldtnUnit}</ConsolidationUnit>
                                                 <Item>
                                                     <RowNumber>1</RowNumber>
-                                                    <PartnerConsolidationUnit>${data.PartnerUnit}</PartnerConsolidationUnit>
+                                                    <PartnerConsolidationUnit>PRC</PartnerConsolidationUnit>
                                                     <FinancialStatementItem>${data.MasterFnclSmtItm}</FinancialStatementItem>
                                                     <SubitemCategory>1</SubitemCategory>
                                                     <Subitem>915</Subitem>
@@ -640,8 +641,6 @@ function(
                         </soapenv:Body>
                     </soapenv:Envelope>`;
         },
-        
-
 
         _generateUUID: function() {
             // 간단한 UUID 생성 함수
@@ -652,9 +651,6 @@ function(
             });
         },
 
-        
-        
-        
         addEntryToTree: function (parentNode, entry, parentUUID) {
             var rbunitNode = parentNode.children.find(function (child) {
                 return child.name === entry.RBUNIT;
@@ -701,9 +697,14 @@ function(
                 };
         
                 this.getModel().create("/GRVUPL03", draftEntry, {
-                    success: function () {
-                        resolve();
-                    },
+                    success: function (oData) {
+                        this.getModel('uploadedStatus').setProperty('/WF01', true)
+                        if (!this._draftEntryKeys) {
+                            this._draftEntryKeys = [];
+                        }
+                        this._draftEntryKeys.push(oData.Uuid); // 생성된 드래프트의 키 또는 UUID를 저장
+                            resolve();
+                        }.bind(this),
                     error: function (oError) {
                         var errorMessage = "업로드 실패: " + (oError.message || "알 수 없는 오류");
                         sap.m.MessageToast.show(errorMessage); 
@@ -713,6 +714,97 @@ function(
                 });
             });
         },
+
+        onPressSave: function() {
+            var _t = this;
+            _t.getView().setBusy(true);
+
+            if (!_t._draftEntryKeys || _t._draftEntryKeys.length === 0) {
+                sap.m.MessageToast.show("활성화할 드래프트 데이터가 없습니다.");
+                return;
+            }
+        
+            var activatePromises = _t._draftEntryKeys.map(function(draftKey) {
+                return new Promise((resolve, reject) => {
+                    var sActivatePath = "/GRVUPL03Activate";
+                    var oModel = _t.getModel();
+                    oModel.callFunction(sActivatePath, {
+                        method: "POST",
+                        urlParameters: {
+                            Uuid: draftKey,
+                            IsActiveEntity: false
+                        },
+                        success: function(oData) {
+                            _t.getView().setBusy(false);
+
+                            resolve(oData);
+                        },
+                        error: function(oError) {
+                            var errorMessage = "드래프트 활성화 실패: " + (oError.message || "알 수 없는 오류");
+                            _t.getView().setBusy(false);
+                            sap.m.MessageToast.show(errorMessage);
+                            reject(oError);
+                        }
+                    });
+                });
+            });
+        
+            Promise.all(activatePromises)
+                .then(function(results) {
+                    sap.m.MessageToast.show("모든 드래프트가 성공적으로 임포트 되었습니다.");
+                    _t.getModel('uploadedStatus').setProperty('/WF01', false)
+                    _t.getModel('uploadedStatus').setProperty('/WF02', true)
+
+                })
+                .catch(function(error) {
+                    console.error("드래프트 활성화 중 오류 발생:", error);
+                });
+        },
+
+        onPressSend: function() {
+            var _t = this;
+
+            _t.getView().setBusy(true);
+            
+            if (!_t._draftEntryKeys || _t._draftEntryKeys.length === 0) {
+                sap.m.MessageToast.show("전송할 드래프트 데이터가 없습니다.");
+                _t.getView().setBusy(false);
+                return;
+            }
+            var oModel = _t.getModel();
+            
+            var readPromises = _t._draftEntryKeys.map(function(draftKey) {
+                return new Promise((resolve, reject) => {
+                    var sPath = `/RprtdCnsldEntity(guid'${draftKey}')`;
+                    oModel.read(sPath, {
+                        success: function(oData) {
+                            resolve(oData); 
+                        },
+                        error: function(oError) {
+                            reject(oError); 
+                        }
+                    });
+                });
+            });
+        
+            // 모든 데이터를 조회한 후 SOAP API 호출
+            Promise.all(readPromises)
+                .then(function(results) {
+                    results.forEach(function(data) {
+                        console.log(data)
+                        _t.getView().setBusy(false);
+                        // 조회된 각 데이터로 SOAP API 호출
+                        _t._checkUploadedDataWithSOAP(data);
+                    });
+                })
+                .catch(function(error) {
+                    console.error("드래프트 데이터 조회 중 오류 발생:", error);
+                    _t.getView().setBusy(false);
+                    sap.m.MessageToast.show("드래프트 데이터 조회 중 오류 발생.");
+                });
+        },
+        
+        
         
 
         onTaskLogPress() {

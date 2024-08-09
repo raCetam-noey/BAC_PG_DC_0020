@@ -58,9 +58,9 @@
                                         <m:VBox height="100%" class="scrollablePlace">
                                             <mdc:ActionToolbar width="100%" >
                                                         <mdc:end>
-                                                            <m:Button text="저장" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
-                                                            <m:Button text="제출" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
-                                                            <m:Button text="승인" enabled="{path:'objectView>/WF',formatter:'.formatter.formatWFButton'}"/>
+                                                            <m:Button text="저장" enabled="{path:'uploadedStatus>/WF01'}" press="onPressSave"/>
+                                                            <m:Button text="제출" enabled="{path:'uploadedStatus>/WF02'}" press="onPressSend"/>
+                                                            <m:Button text="승인" enabled="{path:'uploadedStatus>/WF03'}"/>
                                                             <m:Button text="작업상태로그" press="onTaskLogPress" type="Emphasized" enabled="true"/>
                                                         </mdc:end>
                                             </mdc:ActionToolbar>
